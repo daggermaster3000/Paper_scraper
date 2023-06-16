@@ -21,6 +21,10 @@
         <input type="text" id="keywordInput" class="input-field" placeholder="Enter a keyword">
         <input type="text" id="pagesInput" class="input-field" placeholder="Enter the number of pages to search">
         <button class="button" onClick="scrape_papers();">Search</button>
+        <input id="groupInput" type="text" class="input-field" list="groupList" placeholder="Enter a group name" />
+        <datalist>
+        </datalist>
+        <button class="button" onClick="createGroup();">Create</button>
     </div>
     <div class="tab">
         <button class="tablinks" id="defaultOpen" onclick="openCity(event, 'Results')">Results</button>
@@ -268,14 +272,52 @@
         }
 
 
-        //code for the collapsible
-        var collapsible = document.querySelector('.collapsible');
-        var collapsibleContent = document.querySelector('.content');
 
-        collapsible.addEventListener('click', function() {
-        collapsibleContent.style.display = collapsibleContent.style.display === 'none' ? 'block' : 'none';
-        this.classList.toggle("activeCollapse");
-});
+
+        //code for the collapsible
+        let groupList = []
+        function createGroup() {
+            // get the group name
+            input = document.getElementById('groupInput')
+            groupName = input.value;
+            groupList.push(groupName)
+            //Create the html
+            //Create the button
+            var collapsibleButton = document.createElement('button');
+            collapsibleButton.textContent = groupName;
+            collapsibleButton.classList.add('collapsible');
+            collapsibleButton.setAttribute("id", "collapsibleButton")
+            console.log("2")
+            //Create the content div
+            var content = document.createElement('div');
+            content.style.display = 'none';
+            content.classList.add('content');
+            content.innerHTML = '<p>This is the collapsible content.</p>';
+
+            //Append to the tab section
+            var container = document.getElementById('ReadPapers');
+            container.appendChild(collapsibleButton);
+            container.appendChild(content);
+
+
+            var coll = document.getElementsByClassName("collapsible");
+        var i;
+
+        // Make the stuff collapsible
+        for (i = 0; i < coll.length; i++) {
+        coll[i].addEventListener("click", function() {
+            this.classList.toggle("active");
+            var content = this.nextElementSibling;
+            if (content.style.display === "block") {
+            content.style.display = "none";
+            } else {
+            content.style.display = "block";
+            }
+        });
+        }
+            //Manage the backend
+
+        }
 
     </script>
 
