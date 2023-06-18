@@ -148,12 +148,12 @@ function handleCheckboxChange(event) {
         uncheckCheckbox(title)
     }
     //update the table as well after 5 sec
-    function wait(callback) {
-        setTimeout(callback, 5000); // 5 seconds
-    }
-    wait(function () {
+    //function wait(callback) {
+      //  setTimeout(callback, 5000); // 5 seconds
+   // }
+    //wait(function () {
         LoadReadPapers();
-    });
+    //});
 
 
 }
@@ -224,43 +224,50 @@ function DeleteParent(element) {
 
 
 //code for the collapsible
-let groupList = []
+
 function createGroup() {
-    // get the group name
-    input = document.getElementById('groupInput')
-    groupName = input.value;
-    groupList.push(groupName)
+    
     //Create the html
     var collapsibleDiv = document.createElement('div');
-    collapsibleDiv.setAttribute("id", "collapsibleDiv")
+    collapsibleDiv.setAttribute("id", "collapsibleDiv");
+
     //Create the collapsible button
     var collapsibleButton = document.createElement('button');
-    collapsibleButton.textContent = groupName;
     collapsibleButton.classList.add('collapsible');
-    collapsibleButton.setAttribute("id", "collapsibleButton")
+    collapsibleButton.setAttribute("id", "collapsibleButton");
     collapsibleButton.addEventListener("click", function () {
         this.classList.toggle("active");
         var content = this.nextElementSibling;
         if (content.style.display === "block") {
             content.style.display = "none";
         } else {
-            content.style.display = "block";
+            content.style.display = "block";  
         }
+        if (content.style.maxHeight){
+            content.style.maxHeight = null;
+          } else {
+            content.style.maxHeight = content.scrollHeight + "px";
+          }
     });
-    collapsibleButton.innerHTML = '<input type="text" placeholder="Enter text" class="input-field">'
+    // Create the input
+    var input = document.createElement("input");
+    input.type = "text";
+    input.classList.add('input-field');
+    input.placeholder = "Enter Group Name";
+    //collapsibleButton.innerHTML = '<input type="text" placeholder="Enter Group Name" class="input-field">'
 
     //Create the delete button
     var deleteButton = document.createElement('button');
     deleteButton.classList.add('deleteButton')
     deleteButton.setAttribute("id", "deleteButton")
     deleteButton.innerHTML = '<i class="fa fa-trash-o"></i>';
+
     // Delete the collapsible div on click
     deleteButton.addEventListener('click', function () {
         // Function to be executed when the button is clicked
         console.log('Deleted collapsible');
         DeleteParent(this);
     });
-
 
 
     //Create the content div
@@ -274,13 +281,8 @@ function createGroup() {
     container.appendChild(collapsibleDiv);
     collapsibleDiv.appendChild(deleteButton);
     collapsibleDiv.appendChild(collapsibleButton);
-
     collapsibleDiv.appendChild(content);
-
-    var coll = document.getElementsByClassName("collapsible");
-    var i;
-
-    // Make the stuff collapsible
+    collapsibleButton.appendChild(input);
    
     //Manage the backend
 

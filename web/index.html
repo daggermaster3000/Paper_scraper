@@ -23,10 +23,8 @@
         <input type="text" id="keywordInput" class="input-field" placeholder="Enter a keyword" onkeydown="key_scrape_papers();">
         <input type="text" id="pagesInput" class="input-field" placeholder="Enter the number of pages to search">
         <button class="button" onClick="scrape_papers();">Search</button>
-        <input id="groupInput" type="text" class="input-field" list="groupList" placeholder="Enter a group name" />
-        <datalist>
-        </datalist>
-        <button class="button" onClick="createGroup();">Create</button>
+
+        <button class="button" onClick="createGroup();">New Group</button>
     </div>
     <div class="tab">
         <button class="tablinks" id="defaultOpen" onclick="openCity(event, 'Results')">Results</button>
