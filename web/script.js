@@ -1,5 +1,5 @@
 // Get the element with id="defaultOpen" and click on it
-document.getElementById("defaultOpen").click();
+document.getElementById("startOpen").click();
 
 // show the loader
 function showLoader() {
@@ -220,6 +220,7 @@ function DeleteParent(element) {
     console.log('Deleted collapsible');
     var ParentDiv = element.parentNode;
     ParentDiv.remove();
+    UpdateGroupSelect();
 }
 
 
@@ -256,7 +257,7 @@ function createGroup() {
     input.placeholder = "Enter Group Name";
     input.addEventListener('input', function() {
         RenameClass(this);
-        
+        UpdateGroupSelect();
       });
     //Create the delete button
     var deleteButton = document.createElement('button');
@@ -285,12 +286,14 @@ function createGroup() {
     collapsibleDiv.appendChild(collapsibleButton);
     collapsibleDiv.appendChild(content);
     collapsibleButton.appendChild(input);
-    
+
+       
     //Manage the backend
 
 }
 
 function RenameClass(element){
+    //rename the collapsible class
     var newClassName = element.value;
     newClassName = newClassName.replace(/\s/g, "-");
     button = element.parentNode;
@@ -306,4 +309,19 @@ function key_scrape_papers() {
         event.preventDefault(); // Prevent the default Enter key behavior
         scrape_papers();
     }
+}
+
+function UpdateGroupSelect(){
+    selectContainer = document.getElementById("GroupNamesSelect")
+    //clear the inner html
+    selectContainer.innerHTML = "";
+    groups = document.querySelectorAll("#collapsibleDiv");
+    //go through all the groups and index them
+    for (var i = 0; i < groups.length; i++) {
+        var group = groups[i];
+        var option = document.createElement('option')
+        option.value = group.classList[0];
+        option.innerHTML = group.classList[0];
+        selectContainer.appendChild(option)
+      }
 }

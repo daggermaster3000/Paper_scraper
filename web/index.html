@@ -23,12 +23,15 @@
         <input type="text" id="keywordInput" class="input-field" placeholder="Enter a keyword" onkeydown="key_scrape_papers();">
         <input type="text" id="pagesInput" class="input-field" placeholder="Enter the number of pages to search">
         <button class="button" onClick="scrape_papers();">Search</button>
-
         <button class="button" onClick="createGroup();">New Group</button>
+        
+        <select id="GroupNamesSelect" class="input-field">
+            
+        </select>
     </div>
     <div class="tab">
         <button class="tablinks" id="defaultOpen" onclick="openCity(event, 'Results')">Results</button>
-        <button class="tablinks" onclick="openCity(event, 'ReadPapers'); LoadReadPapers();">Reading List</button>
+        <button class="tablinks" id="startOpen" onclick="openCity(event, 'ReadPapers'); LoadReadPapers();">Reading List</button>
         <button class="tablinks" onclick="openCity(event, 'Tokyo')">New Papers</button>
     </div>
     <div id="loader1" class="loader"></div>

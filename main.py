@@ -1,7 +1,11 @@
 """
 Code for a web scraping thing for papers
 
+RANDOM IDEAS:
+1. Go through sci-hub and open pdf directly
+
 TODO:
+- Add elsevier + google scholar + add chose DB                          [ ]
 - Get the checkboxes of the results to be checked with the read papers  [v]
 - Suggest new papers                                                    [ ]
 - Add containers for every keyword/search query in the reading list     [ ]
@@ -12,6 +16,10 @@ TODO:
 - Fix the remove paper issue                                            [v]
 - Container gets the class name of the input                            [v]
 - Handle spaces as input to the container                               [v]
+- Add dropbox containing all group names                                [v]
+- Write add to group function  or rewrite                               [ ]
+- Make the groups draggable
+- Write init function
 """
  
 import eel
