@@ -254,8 +254,10 @@ function createGroup() {
     input.type = "text";
     input.classList.add('input-field');
     input.placeholder = "Enter Group Name";
-    //collapsibleButton.innerHTML = '<input type="text" placeholder="Enter Group Name" class="input-field">'
-
+    input.addEventListener('input', function() {
+        RenameClass(this);
+        
+      });
     //Create the delete button
     var deleteButton = document.createElement('button');
     deleteButton.classList.add('deleteButton')
@@ -283,9 +285,19 @@ function createGroup() {
     collapsibleDiv.appendChild(collapsibleButton);
     collapsibleDiv.appendChild(content);
     collapsibleButton.appendChild(input);
-   
+    
     //Manage the backend
 
+}
+
+function RenameClass(element){
+    var newClassName = element.value;
+    newClassName = newClassName.replace(/\s/g, "-");
+    button = element.parentNode;
+    div = button.parentNode;
+    div.classList.remove(div.classList[0])
+    div.classList.add(newClassName)
+    
 }
 
 //Function to call scrape papers when enter is pressed on the input

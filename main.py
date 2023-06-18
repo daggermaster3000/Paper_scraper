@@ -10,6 +10,8 @@ TODO:
 - Remove group name input                                               [ ]
 - Fix the open of the collapsibles                                      [v]
 - Fix the remove paper issue                                            [v]
+- Container gets the class name of the input                            [v]
+- Handle spaces as input to the container                               [ ]
 """
  
 import eel
