@@ -6,10 +6,10 @@ TODO:
 - Suggest new papers                                                    [ ]
 - Add containers for every keyword/search query in the reading list     [ ]
 - Add containers for every keyword/search query in the new papers       [ ]
-- Press Enter to search                                                 [ ]
+- Press Enter to search                                                 [v]
 - Remove group name input                                               [ ]
-- Fix the open of the collapsibles                                      [ ]
-- Fix the remove paper issue                                            [ ]
+- Fix the open of the collapsibles                                      [v]
+- Fix the remove paper issue                                            [v]
 """
  
 import eel

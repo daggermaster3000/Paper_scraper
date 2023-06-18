@@ -238,6 +238,15 @@ function createGroup() {
     collapsibleButton.textContent = groupName;
     collapsibleButton.classList.add('collapsible');
     collapsibleButton.setAttribute("id", "collapsibleButton")
+    collapsibleButton.addEventListener("click", function () {
+        this.classList.toggle("active");
+        var content = this.nextElementSibling;
+        if (content.style.display === "block") {
+            content.style.display = "none";
+        } else {
+            content.style.display = "block";
+        }
+    });
     collapsibleButton.innerHTML = '<input type="text" placeholder="Enter text" class="input-field">'
 
     //Create the delete button
@@ -268,23 +277,11 @@ function createGroup() {
 
     collapsibleDiv.appendChild(content);
 
-
-
     var coll = document.getElementsByClassName("collapsible");
     var i;
 
     // Make the stuff collapsible
-    for (i = 0; i < coll.length; i++) {
-        coll[i].addEventListener("click", function () {
-            this.classList.toggle("active");
-            var content = this.nextElementSibling;
-            if (content.style.display === "block") {
-                content.style.display = "none";
-            } else {
-                content.style.display = "block";
-            }
-        });
-    }
+   
     //Manage the backend
 
 }
