@@ -5,8 +5,11 @@ TODO:
 - Get the checkboxes of the results to be checked with the read papers  [v]
 - Suggest new papers                                                    [ ]
 - Add containers for every keyword/search query in the reading list     [ ]
-- Add containers for every keyword/search query in the new papers      [ ]
-- 
+- Add containers for every keyword/search query in the new papers       [ ]
+- Press Enter to search                                                 [ ]
+- Remove group name input                                               [ ]
+- Fix the open of the collapsibles                                      [ ]
+- Fix the remove paper issue                                            [ ]
 """
  
 import eel
