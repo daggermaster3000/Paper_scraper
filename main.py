@@ -18,8 +18,8 @@ TODO:
 - Handle spaces as input to the container                               [v]
 - Add dropbox containing all group names                                [v]
 - Write add to group function  or rewrite                               [ ]
-- Make the groups draggable
-- Write init function
+- Make the groups draggable                                             [ ]
+- Write init function                                                   [ ]
 """
  
 import eel
@@ -27,7 +27,7 @@ import pandas as pd
 import requests
 from bs4 import BeautifulSoup
 import os
-import csv
+import numpy as np
 
 curdir = str(os.getcwd())
 eel.init('web')
@@ -161,14 +161,50 @@ def load_csv(path,classes,id):
     return df
 
 @eel.expose
-def add_read_entry(keyword,title,file_path = "read_papers.csv",headers=[]):
+def load_reading_list_csv(path,classe,id):
+    '''
+    Return a list containing html tables with the same id as in groupName
+    '''
+    html_tables = []
+
+    # Load the CSV file into a DataFrame
+    df = pd.read_csv(path)
+
+    # Create an array of html tables with id corresponding to the group
+    groups = list(set(df['Groupname']))
+    colnames = df.columns.to_list().sort()
+
+    for group in groups:
+        table = pd.DataFrame(columns=colnames)
+
+        for index, row in df.iterrows():
+            
+            if row['Groupname'] == group:
+                table = table.append(row,ignore_index=True)
+        classes = classe+" "+group
+        print(table)
+        html_tables.append(table.to_html(escape=False,classes=classes,table_id=id))
+    #print(html_tables)
+    return html_tables
+    
+
+
+@eel.expose
+def add_read_entry(keyword,group_name,title,file_path = "read_papers.csv",headers=[]):
     # Check if the file exists
     file_exists = os.path.isfile(file_path)
+
     # get the row containing the title of the paper to add
     df = pd.read_csv("papers.csv")
-    add = df[df['Title']==title]
-    df['Keyowrd'] = keyword
-        
+    add = df[df['Title']==title].copy()
+
+    # add keyword column and groupname column
+    add.loc[add.loc[df['Title'] == title].index,'Keyword']=keyword
+    add.loc[add.loc[df['Title'] == title].index,'Groupname']=group_name
+    # pd.set_option('display.max_columns', None)
+    # print(add)
+    
+    # add to csv with header if file not created
     if not file_exists or os.stat(file_path).st_size == 0:
             add.to_csv("read_papers.csv", mode='a', header=True, index=False)
             print("header created")

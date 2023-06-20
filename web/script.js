@@ -36,50 +36,65 @@ function initializeDataTables() {
 }
 
 function LoadReadPapers() {
-    eel.load_csv("read_papers.csv", "readTable", "myreadTable")(function (content) {
-        // clear the div
-        var myDiv = document.getElementById("readpapers");
-        myDiv.innerHTML = "";
 
-        // Update the div 
-        document.querySelector(".readpapers").innerHTML = content;
+    eel.load_reading_list_csv("read_papers.csv", "readTable", "myreadTable")(function (content) {
 
-        //Add checkboxes
-        var table = document.getElementById("myreadTable");
-        var tbody = table.getElementsByTagName("tbody")[0];
-        var rows = tbody.getElementsByTagName("tr");
+        //load_reading_list_csv returns an array of html tables
+        var tables = content;
+        //console.log(tables)
+        var parser = new DOMParser();
+        
+        for (i = 0; i < tables.length; i++) {
+            console.log(i)
+            // Get the class of the table
+            //console.log(tables[i])
+            var doc = parser.parseFromString(tables[i], 'text/html');
+            var element = doc.querySelector('table');
+            var GroupName = Array.from(element.classList);
+            console.log(GroupName[2])
 
-        // Add checkboxes to each row
-        for (var i = 0; i < rows.length; i++) {
-            // Create a new cell for the checkbox
-            var cell = document.createElement("td");
+            // Clear the previous table in the corresponding collapsible
+            var collapsible = document.querySelector("div." + String(GroupName[2]));
+            var contentContainer = collapsible.lastElementChild;
+           // console.log(collapsible)
+            contentContainer.innerHTML = "";
 
-            // Create a checkbox element
-            var checkbox = document.createElement("input");
-            checkbox.type = "checkbox";
-            checkbox.id = "myCheckbox";
-            checkbox.checked = true;
-            // Create the label for the checkbox
-            //var label = document.createElement("label");
-            //label.textContent = "Toggle Function";
-            //label.htmlFor = "myCheckbox";
+            // Update the table
+            contentContainer.innerHTML = tables[i];
 
-            // Append the checkbox to the cell
-            cell.appendChild(checkbox);
-            //cell.appendChild(label);
+            //Add checkboxes specify which myreadTable is used
+            var table = document.getElementById("myreadTable");
+            var tbody = table.getElementsByTagName("tbody")[0];
+            var rows = tbody.getElementsByTagName("tr");
+            console.log("a")
+            // Add checkboxes to each row
+            for (var j = 0; j < rows.length; j++) {
+                // Create a new cell for the checkbox
+                var cell = document.createElement("td");
 
-            // Add event handlers
-            checkbox.addEventListener("change", handleCheckboxChange);
+                // Create a checkbox element
+                var checkbox = document.createElement("input");
+                checkbox.type = "checkbox";
+                checkbox.id = "myCheckbox";
+                checkbox.checked = true;
 
-            // Insert the new cell as the first cell in the row
-            rows[i].insertBefore(cell, rows[i].firstChild);
+                // Append the checkbox to the cell
+                cell.appendChild(checkbox);
+
+                // Add event handlers
+                checkbox.addEventListener("change", handleCheckboxChange);
+
+                // Insert the new cell as the first cell in the row
+                rows[j].insertBefore(cell, rows[j].firstChild);
+            }
+            // Add header for the new column
+            var headerRow = table.getElementsByTagName("thead")[0].getElementsByTagName("tr")[0];
+            var headerCell = document.createElement("th");
+            headerCell.textContent = "Reading";
+            headerRow.insertBefore(headerCell, headerRow.firstChild);
+            $('#myreadTable').DataTable();
+            console.log("b")
         }
-        // Add header for the new column
-        var headerRow = table.getElementsByTagName("thead")[0].getElementsByTagName("tr")[0];
-        var headerCell = document.createElement("th");
-        headerCell.textContent = "Reading";
-        headerRow.insertBefore(headerCell, headerRow.firstChild);
-        $('#myreadTable').DataTable();
     })
 }
 
@@ -149,10 +164,10 @@ function handleCheckboxChange(event) {
     }
     //update the table as well after 5 sec
     //function wait(callback) {
-      //  setTimeout(callback, 5000); // 5 seconds
-   // }
+    //  setTimeout(callback, 5000); // 5 seconds
+    // }
     //wait(function () {
-        LoadReadPapers();
+    LoadReadPapers();
     //});
 
 
@@ -162,7 +177,10 @@ function AddReadEntry(title) {
     // Get keyword input
     var inputElement = document.getElementById("keywordInput");
     var keyword = inputElement.value;
-    eel.add_read_entry(keyword, title);
+    // Get group name select input
+    var group = document.getElementById("GroupNamesSelect");
+    var GroupName = group.options[group.selectedIndex].text;
+    eel.add_read_entry(keyword, GroupName, title);
 }
 
 function RemoveReadEntry(title) {
@@ -227,7 +245,7 @@ function DeleteParent(element) {
 //code for the collapsible
 
 function createGroup() {
-    
+
     //Create the html
     var collapsibleDiv = document.createElement('div');
     collapsibleDiv.setAttribute("id", "collapsibleDiv");
@@ -242,23 +260,23 @@ function createGroup() {
         if (content.style.display === "block") {
             content.style.display = "none";
         } else {
-            content.style.display = "block";  
+            content.style.display = "block";
         }
-        if (content.style.maxHeight){
+        if (content.style.maxHeight) {
             content.style.maxHeight = null;
-          } else {
+        } else {
             content.style.maxHeight = content.scrollHeight + "px";
-          }
+        }
     });
     // Create the input
     var input = document.createElement("input");
     input.type = "text";
     input.classList.add('input-field');
     input.placeholder = "Enter Group Name";
-    input.addEventListener('input', function() {
+    input.addEventListener('input', function () {
         RenameClass(this);
         UpdateGroupSelect();
-      });
+    });
     //Create the delete button
     var deleteButton = document.createElement('button');
     deleteButton.classList.add('deleteButton')
@@ -277,6 +295,7 @@ function createGroup() {
     var content = document.createElement('div');
     content.style.display = 'none';
     content.classList.add('content');
+    
     content.innerHTML = '<div class="readpapers table-container" id="readpapers">';
 
     //Append to the tab section
@@ -287,12 +306,12 @@ function createGroup() {
     collapsibleDiv.appendChild(content);
     collapsibleButton.appendChild(input);
 
-       
+
     //Manage the backend
 
 }
 
-function RenameClass(element){
+function RenameClass(element) {
     //rename the collapsible class
     var newClassName = element.value;
     newClassName = newClassName.replace(/\s/g, "-");
@@ -300,7 +319,7 @@ function RenameClass(element){
     div = button.parentNode;
     div.classList.remove(div.classList[0])
     div.classList.add(newClassName)
-    
+
 }
 
 //Function to call scrape papers when enter is pressed on the input
@@ -311,7 +330,7 @@ function key_scrape_papers() {
     }
 }
 
-function UpdateGroupSelect(){
+function UpdateGroupSelect() {
     selectContainer = document.getElementById("GroupNamesSelect")
     //clear the inner html
     selectContainer.innerHTML = "";
@@ -323,5 +342,5 @@ function UpdateGroupSelect(){
         option.value = group.classList[0];
         option.innerHTML = group.classList[0];
         selectContainer.appendChild(option)
-      }
+    }
 }
