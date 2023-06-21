@@ -8,18 +8,19 @@ TODO:
 - Add elsevier + google scholar + add chose DB                          [ ]
 - Get the checkboxes of the results to be checked with the read papers  [v]
 - Suggest new papers                                                    [ ]
-- Add containers for every keyword/search query in the reading list     [ ]
+- Add containers for every keyword/search query in the reading list     [v]
 - Add containers for every keyword/search query in the new papers       [ ]
 - Press Enter to search                                                 [v]
-- Remove group name input                                               [ ]
+- Remove group name input                                               [v]
 - Fix the open of the collapsibles                                      [v]
 - Fix the remove paper issue                                            [v]
 - Container gets the class name of the input                            [v]
 - Handle spaces as input to the container                               [v]
 - Add dropbox containing all group names                                [v]
-- Write add to group function  or rewrite                               [ ]
+- Write add to group function  or rewrite                               [v]
 - Make the groups draggable                                             [ ]
 - Write init function                                                   [ ]
+- Trigger load_readtables function more often...                        [ ]
 """
  
 import eel
@@ -183,7 +184,7 @@ def load_reading_list_csv(path,classe,id):
             if row['Groupname'] == group:
                 table = table.append(row,ignore_index=True)
         classes = classe+" "+group
-        # print(table)
+        #print(classes)
         # return the html of the df except the last two columns
         html_tables.append(table.iloc[:, :-2].to_html(escape=False,classes=classes,table_id=id))
     #print(html_tables)

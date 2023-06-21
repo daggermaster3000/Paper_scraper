@@ -43,21 +43,32 @@ function LoadReadPapers() {
         var tables = content;
         //console.log(tables)
         var parser = new DOMParser();
-        
+
         for (i = 0; i < tables.length; i++) {
+
             console.log(i)
             // Get the class of the table
             //console.log(tables[i])
             var doc = parser.parseFromString(tables[i], 'text/html');
             var element = doc.querySelector('table');
             var GroupName = Array.from(element.classList);
-            console.log(GroupName[2])
+            console.log(GroupName)
+
+
 
             // Clear the previous table in the corresponding collapsible
+
+            var collapsible = document.querySelector("div." + String(GroupName[2]));
+            if (collapsible == null) {
+                // if the container doesnt exist yet, create it
+                createGroup(GroupName[2], true);
+                console.log("ma bite")
+            }
+
             var collapsible = document.querySelector("div." + String(GroupName[2]));
             var contentContainer = collapsible.lastElementChild;
-           // console.log(collapsible)
-            contentContainer.innerHTML  = "";
+            // console.log(collapsible)
+            contentContainer.innerHTML = "";
 
             // Update the table
             contentContainer.innerHTML = tables[i];
@@ -92,10 +103,11 @@ function LoadReadPapers() {
             var headerCell = document.createElement("th");
             headerCell.textContent = "Reading";
             headerRow.insertBefore(headerCell, headerRow.firstChild);
-            
+
             $(table).DataTable();
             console.log("b")
         }
+
     })
 }
 
@@ -169,7 +181,7 @@ function handleCheckboxChange(event) {
     // }
     //wait(function () {
     LoadReadPapers();
-    
+
     //});
 
 
@@ -246,7 +258,7 @@ function DeleteParent(element) {
 
 //code for the collapsible
 
-function createGroup() {
+function createGroup(GroupName = null, auto = false) {
 
     //Create the html
     var collapsibleDiv = document.createElement('div');
@@ -276,9 +288,11 @@ function createGroup() {
     input.classList.add('input-field');
     input.placeholder = "Enter Group Name";
     input.addEventListener('input', function () {
+        
         RenameClass(this);
         UpdateGroupSelect();
     });
+    
     //Create the delete button
     var deleteButton = document.createElement('button');
     deleteButton.classList.add('deleteButton')
@@ -297,7 +311,7 @@ function createGroup() {
     var content = document.createElement('div');
     content.style.display = 'none';
     content.classList.add('content');
-    
+
     content.innerHTML = '<div class="readpapers table-container" id="readpapers">';
 
     //Append to the tab section
@@ -307,6 +321,19 @@ function createGroup() {
     collapsibleDiv.appendChild(collapsibleButton);
     collapsibleDiv.appendChild(content);
     collapsibleButton.appendChild(input);
+
+    // to rename the class to the GroupName argument
+    if (auto == true) {
+        input.value = GroupName
+    }
+    
+    // But we need to trigger an event in order to get the input to load
+
+    // Create a new "input" event
+    var inputEvent = new Event("input");
+
+    // Dispatch the event on the input element
+    input.dispatchEvent(inputEvent);
 
 
     //Manage the backend
