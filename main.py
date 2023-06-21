@@ -33,6 +33,7 @@ curdir = str(os.getcwd())
 eel.init('web')
 
 def scrape_nature(keyword,pages):
+    '''Scrape the nature website for a given keyword in a number of pages'''
 
     # Create empty lists to store the paper details
     titles = []
@@ -182,8 +183,9 @@ def load_reading_list_csv(path,classe,id):
             if row['Groupname'] == group:
                 table = table.append(row,ignore_index=True)
         classes = classe+" "+group
-        print(table)
-        html_tables.append(table.to_html(escape=False,classes=classes,table_id=id))
+        # print(table)
+        # return the html of the df except the last two columns
+        html_tables.append(table.iloc[:, :-2].to_html(escape=False,classes=classes,table_id=id))
     #print(html_tables)
     return html_tables
     

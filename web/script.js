@@ -57,13 +57,13 @@ function LoadReadPapers() {
             var collapsible = document.querySelector("div." + String(GroupName[2]));
             var contentContainer = collapsible.lastElementChild;
            // console.log(collapsible)
-            contentContainer.innerHTML = "";
+            contentContainer.innerHTML  = "";
 
             // Update the table
             contentContainer.innerHTML = tables[i];
 
             //Add checkboxes specify which myreadTable is used
-            var table = document.getElementById("myreadTable");
+            var table = collapsible.getElementsByClassName("readTable")[0];
             var tbody = table.getElementsByTagName("tbody")[0];
             var rows = tbody.getElementsByTagName("tr");
             console.log("a")
@@ -92,7 +92,8 @@ function LoadReadPapers() {
             var headerCell = document.createElement("th");
             headerCell.textContent = "Reading";
             headerRow.insertBefore(headerCell, headerRow.firstChild);
-            $('#myreadTable').DataTable();
+            
+            $(table).DataTable();
             console.log("b")
         }
     })
@@ -168,6 +169,7 @@ function handleCheckboxChange(event) {
     // }
     //wait(function () {
     LoadReadPapers();
+    
     //});
 
 
@@ -343,4 +345,5 @@ function UpdateGroupSelect() {
         option.innerHTML = group.classList[0];
         selectContainer.appendChild(option)
     }
+    //LoadReadPapers();
 }
