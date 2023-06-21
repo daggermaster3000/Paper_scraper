@@ -21,6 +21,8 @@ TODO:
 - Make the groups draggable                                             [ ]
 - Write init function                                                   [ ]
 - Trigger load_readtables function more often...                        [ ]
+- Fix the readlist single delete bug                                    [ ]
+- Make the delete remove all the group papers from the database         [ ]
 """
  
 import eel
