@@ -168,11 +168,11 @@ function handleCheckboxChange(event) {
     var title = titleCell.textContent;
 
     if (event.target.checked) {
-        // Checkbox is checked, call functionA
+        // Checkbox is checked, add entry
         AddReadEntry(title);
     } else {
-        // Checkbox is unchecked, call functionB
-        RemoveReadEntry(title);
+        // Checkbox is unchecked, remove entry
+        RemoveReadEntry(title,method="Title");
         uncheckCheckbox(title)
     }
     //update the table as well after 5 sec
@@ -197,12 +197,12 @@ function AddReadEntry(title) {
     eel.add_read_entry(keyword, GroupName, title);
 }
 
-function RemoveReadEntry(title) {
+function RemoveReadEntry(title,method) {
     console.log("Removing read entry");
     // Get keyword input
     var inputElement = document.getElementById("keywordInput");
     var keyword = inputElement.value;
-    eel.remove_read_entry(keyword, title);
+    eel.remove_read_entry(title,method);
 }
 
 // Code for the tabs
@@ -288,7 +288,6 @@ function createGroup(GroupName = null, auto = false) {
     input.classList.add('input-field');
     input.placeholder = "Enter Group Name";
     input.addEventListener('input', function () {
-        
         RenameClass(this);
         UpdateGroupSelect();
     });
@@ -303,7 +302,15 @@ function createGroup(GroupName = null, auto = false) {
     deleteButton.addEventListener('click', function () {
         // Function to be executed when the button is clicked
         console.log('Deleted collapsible');
+
+        // To handle the backend, we remove the read entries
+
+        // Get the titles from the tables
+        parentCollapsible = this.parentNode;
+        groupname = parentCollapsible.className;
+        RemoveReadEntry(groupname,"Groupname");
         DeleteParent(this);
+
     });
 
 

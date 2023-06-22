@@ -3,26 +3,21 @@ Code for a web scraping thing for papers
 
 RANDOM IDEAS:
 1. Go through sci-hub and open pdf directly
+2. Citation graph
+3. Make a dashboard
+4. Read paper in reading list
 
 TODO:
+- Delete button backend                                                 [ ]
+- Clean the code up                                                     [ ]
+- Add open Alex                                                         [ ]
 - Add elsevier + google scholar + add chose DB                          [ ]
-- Get the checkboxes of the results to be checked with the read papers  [v]
 - Suggest new papers                                                    [ ]
-- Add containers for every keyword/search query in the reading list     [v]
 - Add containers for every keyword/search query in the new papers       [ ]
-- Press Enter to search                                                 [v]
-- Remove group name input                                               [v]
-- Fix the open of the collapsibles                                      [v]
-- Fix the remove paper issue                                            [v]
-- Container gets the class name of the input                            [v]
-- Handle spaces as input to the container                               [v]
-- Add dropbox containing all group names                                [v]
-- Write add to group function  or rewrite                               [v]
 - Make the groups draggable                                             [ ]
 - Write init function                                                   [ ]
 - Trigger load_readtables function more often...                        [ ]
 - Fix the readlist single delete bug                                    [ ]
-- Make the delete remove all the group papers from the database         [ ]
 """
  
 import eel
@@ -44,14 +39,14 @@ def scrape_nature(keyword,pages):
     #abstracts = []
     dates = []
     links = []
+    citations = []
 
     if pages == '':
         pages = 2
     else:
         pages = int(pages)
-    
 
-    for i in range(1,pages):
+    for i in range(1, pages):
         url = f"https://www.nature.com/search?q={keyword}&order=relevance&page={i}"  # URL for Nature search with the keyword
 
         # Send a GET request to the website
@@ -68,13 +63,14 @@ def scrape_nature(keyword,pages):
             authors_element = article.find('ul', class_='c-author-list')  # Replace 'ul' and 'class_' with the appropriate HTML tags and attributes
             #abstract_element = article.find('div', class_='c-card__section')  # Replace 'div' and 'class_' with the appropriate HTML tags and attributes
             date_element = article.find('time')
-
+           
             # Extract the text from the elements if they exist
             title = title_element.text.strip() if title_element else "N/A"
             author = authors_element.text.strip() if authors_element else "N/A"
             #abstract = abstract_element.text.strip() if abstract_element else "N/A"
             date = date_element['datetime'] if date_element else "N/A"
             link = title_element['href'] if title_element else "N/A"
+            
 
             # Append the paper details to the corresponding lists
             if title not in titles: 
@@ -83,14 +79,16 @@ def scrape_nature(keyword,pages):
                 #abstracts.append(abstract)
                 dates.append(date)
                 links.append(f'https://www.nature.com{link}')
+                
 
-    # Create a DataFrame from the lists of paper details
-    data = {'Title': titles, 'Authors': authors, 'Date of Publication': dates, "Links": links}
-    df = pd.DataFrame(data)
-    # format the hyperlinks
-    df['Links'] = df['Links'].apply(lambda x: f'<a href="{x}" target="_blank">{x}</a>')
-    
+            # Create a DataFrame from the lists of paper details
+            data = {'Title': titles, 'Authors': authors, 'Date of Publication': dates, 'Links': links}
+            df = pd.DataFrame(data)
+            # format the hyperlinks
+            df['Links'] = df['Links'].apply(lambda x: f'<a href="{x}" target="_blank">{x}</a>')
+
     return df
+
 
 
 def scrape_pubmed(keyword,pages):
@@ -218,13 +216,19 @@ def add_read_entry(keyword,group_name,title,file_path = "read_papers.csv",header
         print("entry added")
 
 @eel.expose
-def remove_read_entry(keyword,title,file_path = "read_papers.csv",headers=[]):
-    # get the row containing the title of the paper to add
-    df = pd.read_csv("papers.csv")
-    remove = df[df['Title']==title]
+def remove_read_entry(title, method = 'Title', file_path = "read_papers.csv"):
+    '''
+    Removes entry from csv file
+
+    PARAMETERS
+    - title
+    - file_path
+    - method: The column name in which we want to iterate to find the element(s)
+    '''
+    print(method)
     # remove the entry from the read papers list
     df2 = pd.read_csv("read_papers.csv")
-    df2 = df2[df2['Title'] != title]
+    df2 = df2[df2[method] != title]
     df2.to_csv("read_papers.csv", index=False)
     print("entry removed")
 
