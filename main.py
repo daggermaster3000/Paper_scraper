@@ -25,8 +25,9 @@ import pandas as pd
 import requests
 from bs4 import BeautifulSoup
 import os
-import numpy as np
+import warnings
 
+warnings.simplefilter(action='ignore', category=FutureWarning)
 curdir = str(os.getcwd())
 eel.init('web')
 
