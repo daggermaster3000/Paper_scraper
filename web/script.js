@@ -62,7 +62,7 @@ function LoadReadPapers() {
             if (collapsible == null) {
                 // if the container doesnt exist yet, create it
                 createGroup(GroupName[2], true);
-                console.log("ma bite")
+                //console.log("ma bite")
             }
 
             var collapsible = document.querySelector("div." + String(GroupName[2]));
@@ -172,7 +172,7 @@ function handleCheckboxChange(event) {
         AddReadEntry(title);
     } else {
         // Checkbox is unchecked, remove entry
-        RemoveReadEntry(title,method="Title");
+        RemoveReadEntry(title,method="title");
         uncheckCheckbox(title)
     }
     //update the table as well after 5 sec

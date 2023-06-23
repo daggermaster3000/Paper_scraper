@@ -90,11 +90,11 @@ def add_read_entry(keyword,group_name,title,file_path = "read_papers.csv",header
 
     # get the row containing the title of the paper to add
     df = pd.read_csv("papers.csv")
-    add = df[df['Title']==title].copy()
+    add = df[df['title']==title].copy()
 
     # add keyword column and groupname column
-    add.loc[add.loc[df['Title'] == title].index,'Keyword']=keyword
-    add.loc[add.loc[df['Title'] == title].index,'Groupname']=group_name
+    add.loc[add.loc[df['title'] == title].index,'Keyword']=keyword
+    add.loc[add.loc[df['title'] == title].index,'Groupname']=group_name
     # pd.set_option('display.max_columns', None)
     # print(add)
     
@@ -107,7 +107,7 @@ def add_read_entry(keyword,group_name,title,file_path = "read_papers.csv",header
         print("entry added")
 
 @eel.expose
-def remove_read_entry(title, method = 'Title', file_path = "read_papers.csv"):
+def remove_read_entry(title, method = 'title', file_path = "read_papers.csv"):
     '''
     Removes entry from csv file
 
