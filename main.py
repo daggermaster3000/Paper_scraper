@@ -26,6 +26,7 @@ import requests
 from bs4 import BeautifulSoup
 import os
 import warnings
+import alex
 
 warnings.simplefilter(action='ignore', category=FutureWarning)
 curdir = str(os.getcwd())
@@ -147,9 +148,10 @@ def scrape_pubmed(keyword,pages):
 
 @eel.expose
 def scrape_papers(keyword,pages):
-    df1 = scrape_nature(keyword,pages)
-    df2 = scrape_pubmed(keyword,pages)
-    df = df1.append(df2)
+    #df1 = scrape_nature(keyword,pages)
+    #df2 = scrape_pubmed(keyword,pages)
+    #df = df1.append(df2)
+    df = alex.scrape_alex(keyword)
     df.to_csv('papers.csv', index=False)
     print("Saved df as csv")
 
