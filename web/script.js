@@ -21,8 +21,9 @@ function scrape_papers() {
     var inputElement = document.getElementById("keywordInput");
     var userInput = inputElement.value;
     // Get pages input
-    var inputElement = document.getElementById("pagesInput");
-    var pagesInput = inputElement.value;
+    //var inputElement = document.getElementById("pagesInput");
+    //var pagesInput = inputElement.value;
+    var pagesInput = 5
     eel.scrape_papers(userInput, pagesInput)();
     load_csv(function () {
         hideLoader();
@@ -33,6 +34,16 @@ function scrape_papers() {
 // Function to initialize DataTables
 function initializeDataTables() {
     $('#myTable').DataTable();
+}
+
+function LoadRelatedPapers(){
+
+    // get all groups
+    groups = document.getElementsByClassName()
+    // load new papers 
+    eel.get_related_works
+
+
 }
 
 function LoadReadPapers() {
@@ -62,7 +73,6 @@ function LoadReadPapers() {
             if (collapsible == null) {
                 // if the container doesnt exist yet, create it
                 createGroup(GroupName[2], true);
-                //console.log("ma bite")
             }
 
             var collapsible = document.querySelector("div." + String(GroupName[2]));

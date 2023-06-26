@@ -114,3 +114,6 @@ def scrape_pubmed(keyword,pages):
     df['Links'] = df['Links'].apply(lambda x: f'<a href="{x}" target="_blank">{x}</a>')
 
     return df
+
+
+

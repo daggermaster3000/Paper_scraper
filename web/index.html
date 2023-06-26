@@ -18,21 +18,33 @@
 <body>
 
     <h1>Paper Mate</h1>
-
+    <div class="description">
+    <p>How to use this thing:</p>
+    <p>1. Create a new group</p>
+    <p>2. Search for a topic/keyword/title</p>
+    <p>3. Add papers of interest to selected group</p>
+    </div>
+    
     <div id="inputContainer">
         <input type="text" id="keywordInput" class="input-field" placeholder="Enter a keyword" onkeydown="key_scrape_papers();">
-        <input type="text" id="pagesInput" class="input-field" placeholder="Enter the number of pages to index"> 
+        <!--<input type="text" id="pagesInput" class="input-field" placeholder="Enter the number of pages to index"> --->
+        <select id="DBSelect" class="input-field">
+            <option disabled selected value="">Select a Database</option>
+            <option value="OpenAlex">OpenAlex</option>
+            <option value="Crossref">Crossref (not functional yet)</option>
+            <option>Ghetto webscrape</option>
+        </select>
         <button class="button" onClick="scrape_papers();">Search</button>
 
         <button class="button" onClick="createGroup();">New Group</button>
         <select id="GroupNamesSelect" class="input-field">
-            
+            <option disabled selected value="">Select Group</option>
         </select>
     </div>
     <div class="tab">
         <button class="tablinks" id="defaultOpen" onclick="openCity(event, 'Results')">Results</button>
         <button class="tablinks" id="startOpen" onclick="openCity(event, 'ReadPapers'); LoadReadPapers();">Reading List</button>
-        <button class="tablinks" onclick="openCity(event, 'Tokyo')">New Papers</button>
+        <button class="tablinks" onclick="openCity(event, 'NewPapers')">New Papers</button>
     </div>
     <div id="loader1" class="loader"></div>
 

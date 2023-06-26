@@ -8,16 +8,19 @@ RANDOM IDEAS:
 4. Read paper in reading list
 
 TODO:
-- Delete button backend                                                 [ ]
-- Clean the code up                                                     [ ]
-- Add open Alex                                                         [ ]
-- Add elsevier + google scholar + add chose DB                          [ ]
+- Delete button backend                                                 [v]
+- Clean the code up                                                     [v]
+- Add open Alex                                                         [v]
+- Add crossref                                                          [ ]
+- Add chose DB                                                          [ ]
+- Add notes section                                                     [ ]
 - Suggest new papers                                                    [ ]
 - Add containers for every keyword/search query in the new papers       [ ]
 - Make the groups draggable                                             [ ]
 - Write init function                                                   [ ]
 - Trigger load_readtables function more often...                        [ ]
-- Fix the readlist single delete bug                                    [ ]
+- Fix the readlist single delete bug                                    [v]
+- fix the id and classes issues                                         [ ]
 """
  
 import eel
@@ -75,9 +78,13 @@ def load_reading_list_csv(path,classe,id):
             if row['Groupname'] == group:
                 table = table.append(row,ignore_index=True)
         classes = classe+" "+group
-        #print(classes)
+
+        # Keep the columns we want
+        table = table.iloc[:, :-2]
+        table = table.drop("relevance_score",axis=1)
+
         # return the html of the df except the last two columns
-        html_tables.append(table.iloc[:, :-2].to_html(escape=False,classes=classes,table_id=id))
+        html_tables.append(table.to_html(escape=False,classes=classes,table_id=id))
     #print(html_tables)
     return html_tables
     
@@ -122,6 +129,13 @@ def remove_read_entry(title, method = 'title', file_path = "read_papers.csv"):
     df2 = df2[df2[method] != title]
     df2.to_csv("read_papers.csv", index=False)
     print("entry removed")
+
+@eel.expose
+def get_related_works(title,classes,id):
+    related_papers_df = alex.get_new_related_works(title)[0]
+    related_papers_df.to_html(escape=False,classes=classes,table_id=id)
+
+    return related_papers_df
 
 
 eel.start('index.html', size=(1000, 800))
