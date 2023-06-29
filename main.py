@@ -12,15 +12,16 @@ TODO:
 - Clean the code up                                                     [v]
 - Add open Alex                                                         [v]
 - Add crossref                                                          [ ]
-- Add chose DB                                                          [ ]
+- Add chose DB                                                          [v]
 - Add notes section                                                     [ ]
 - Suggest new papers                                                    [ ]
+- Add excalidraw notes                                                  [ ] 
 - Add containers for every keyword/search query in the new papers       [ ]
 - Make the groups draggable                                             [ ]
 - Write init function                                                   [ ]
 - Trigger load_readtables function more often...                        [ ]
 - Fix the readlist single delete bug                                    [v]
-- fix the id and classes issues                                         [ ]
+- fix the id and classes issues                                         [v]
 """
  
 import eel
@@ -77,14 +78,14 @@ def load_reading_list_csv(path,classe,id):
             
             if row['Groupname'] == group:
                 table = table.append(row,ignore_index=True)
-        classes = classe+" "+group
+        
 
         # Keep the columns we want
         table = table.iloc[:, :-2]
-        table = table.drop("relevance_score",axis=1)
+        #table = table.drop("relevance_score",axis=1)
 
         # return the html of the df except the last two columns
-        html_tables.append(table.to_html(escape=False,classes=classes,table_id=id))
+        html_tables.append(table.to_html(escape=False,classes=classe,table_id=group))
     #print(html_tables)
     return html_tables
     
@@ -123,12 +124,12 @@ def remove_read_entry(title, method = 'title', file_path = "read_papers.csv"):
     - file_path
     - method: The column name in which we want to iterate to find the element(s)
     '''
-    print(method)
+    print("remove method: "+method)
     # remove the entry from the read papers list
     df2 = pd.read_csv("read_papers.csv")
     df2 = df2[df2[method] != title]
     df2.to_csv("read_papers.csv", index=False)
-    print("entry removed")
+    return("entry removed")
 
 @eel.expose
 def get_related_works(title,classes,id):
@@ -137,5 +138,18 @@ def get_related_works(title,classes,id):
 
     return related_papers_df
 
+@eel.expose
+def rename_group_name(old_name,new_name):
+    """
+    Rename the group name column if the groupname is changed after adding papers to read
+    """
+    print("old name:"+str(old_name)+"new name: "+new_name)
+    df = pd.read_csv("read_papers.csv")
+    df['Groupname'] = df['Groupname'].replace(old_name, new_name)
 
-eel.start('index.html', size=(1000, 800))
+    df.to_csv("read_papers.csv", index=False)
+    print("Groupname updated in read_papers.csv")
+    return "DB updated with success!"
+
+
+eel.start('index.html', size=(700, 800))

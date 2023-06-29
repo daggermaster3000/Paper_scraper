@@ -1,3 +1,6 @@
+// Global variables
+var previousName = "none";
+
 // Get the element with id="defaultOpen" and click on it
 document.getElementById("startOpen").click();
 
@@ -15,6 +18,7 @@ function hideLoader() {
 }
 
 function scrape_papers() {
+    printFunctionName();
     document.getElementById("defaultOpen").click();
     showLoader();
     // Get keyword input
@@ -37,7 +41,7 @@ function initializeDataTables() {
 }
 
 function LoadRelatedPapers(){
-
+    printFunctionName();
     // get all groups
     groups = document.getElementsByClassName()
     // load new papers 
@@ -47,12 +51,12 @@ function LoadRelatedPapers(){
 }
 
 function LoadReadPapers() {
-
+    printFunctionName();
     eel.load_reading_list_csv("read_papers.csv", "readTable", "myreadTable")(function (content) {
 
         //load_reading_list_csv returns an array of html tables
         var tables = content;
-        //console.log(tables)
+        console.log(tables)
         var parser = new DOMParser();
 
         for (i = 0; i < tables.length; i++) {
@@ -62,22 +66,22 @@ function LoadReadPapers() {
             //console.log(tables[i])
             var doc = parser.parseFromString(tables[i], 'text/html');
             var element = doc.querySelector('table');
-            var GroupName = Array.from(element.classList);
+            var GroupName = element.id;
             console.log(GroupName)
 
 
 
             // Clear the previous table in the corresponding collapsible
 
-            var collapsible = document.querySelector("div." + String(GroupName[2]));
+            var collapsible = document.querySelector("div#" + String(GroupName));
             if (collapsible == null) {
                 // if the container doesnt exist yet, create it
-                createGroup(GroupName[2], true);
+                createGroup(GroupName, true);
             }
 
-            var collapsible = document.querySelector("div." + String(GroupName[2]));
+            var collapsible = document.querySelector("div#" + String(GroupName));
             var contentContainer = collapsible.lastElementChild;
-            // console.log(collapsible)
+            console.log("collapsible id:"+collapsible);
             contentContainer.innerHTML = "";
 
             // Update the table
@@ -122,6 +126,7 @@ function LoadReadPapers() {
 }
 
 function load_csv(callback) {
+    printFunctionName();
     eel.load_csv("papers.csv", "table", "myTable")(function (content) {
         // Update the div 
         document.querySelector(".papers").innerHTML = content;
@@ -166,6 +171,7 @@ function load_csv(callback) {
 }
 
 function handleCheckboxChange(event) {
+    printFunctionName();
     var checkbox = event.target;
 
     // Get the parent row of the checkbox
@@ -197,7 +203,7 @@ function handleCheckboxChange(event) {
 
 }
 function AddReadEntry(title) {
-    console.log("Adding read entry");
+    printFunctionName();
     // Get keyword input
     var inputElement = document.getElementById("keywordInput");
     var keyword = inputElement.value;
@@ -208,7 +214,7 @@ function AddReadEntry(title) {
 }
 
 function RemoveReadEntry(title,method) {
-    console.log("Removing read entry");
+    printFunctionName();
     // Get keyword input
     var inputElement = document.getElementById("keywordInput");
     var keyword = inputElement.value;
@@ -217,6 +223,7 @@ function RemoveReadEntry(title,method) {
 
 // Code for the tabs
 function openCity(evt, cityName) {
+    printFunctionName();
     // Declare all variables
     var i, tabcontent, tablinks;
 
@@ -238,6 +245,7 @@ function openCity(evt, cityName) {
 }
 
 function uncheckCheckbox(elementText) {
+    printFunctionName();
     //uncheck checkbox in the results table
     var table = document.getElementById("myTable");
     var rows = table.getElementsByTagName('tr');
@@ -258,6 +266,7 @@ function uncheckCheckbox(elementText) {
 
 // Function to delete parent div
 function DeleteParent(element) {
+    printFunctionName();
     // Function to be executed when the button is clicked
     console.log('Deleted collapsible');
     var ParentDiv = element.parentNode;
@@ -269,10 +278,10 @@ function DeleteParent(element) {
 //code for the collapsible
 
 function createGroup(GroupName = null, auto = false) {
-
+    printFunctionName();
     //Create the html
     var collapsibleDiv = document.createElement('div');
-    collapsibleDiv.setAttribute("id", "collapsibleDiv");
+    collapsibleDiv.classList.add("collapsibleDiv");
 
     //Create the collapsible button
     var collapsibleButton = document.createElement('button');
@@ -292,11 +301,13 @@ function createGroup(GroupName = null, auto = false) {
             content.style.maxHeight = content.scrollHeight + "px";
         }
     });
+
     // Create the input
     var input = document.createElement("input");
     input.type = "text";
     input.classList.add('input-field');
     input.placeholder = "Enter Group Name";
+    
     input.addEventListener('input', function () {
         RenameClass(this);
         UpdateGroupSelect();
@@ -317,7 +328,7 @@ function createGroup(GroupName = null, auto = false) {
 
         // Get the titles from the tables
         parentCollapsible = this.parentNode;
-        groupname = parentCollapsible.className;
+        groupname = parentCollapsible.id;
         RemoveReadEntry(groupname,"Groupname");
         DeleteParent(this);
 
@@ -358,18 +369,26 @@ function createGroup(GroupName = null, auto = false) {
 }
 
 function RenameClass(element) {
-    //rename the collapsible class
-    var newClassName = element.value;
-    newClassName = newClassName.replace(/\s/g, "-");
+    printFunctionName();
+    //renames the id, not the class !!!!!! handles the backend
     button = element.parentNode;
     div = button.parentNode;
-    div.classList.remove(div.classList[0])
-    div.classList.add(newClassName)
+    previousName = div.id;
+    //rename the collapsible id
+    var newClassName = element.value;
+    newClassName = newClassName.replace(/\s/g, "-");
+
+    div.id = newClassName;
+    eel.rename_group_name(String(previousName),String(newClassName));
+    previousName = newClassName;
+    //div.classList.remove(div.classList[0])
+    //div.classList.add(newClassName)
 
 }
 
 //Function to call scrape papers when enter is pressed on the input
 function key_scrape_papers() {
+    printFunctionName();
     if (event.key === "Enter") {
         event.preventDefault(); // Prevent the default Enter key behavior
         scrape_papers();
@@ -377,17 +396,22 @@ function key_scrape_papers() {
 }
 
 function UpdateGroupSelect() {
+    printFunctionName();
     selectContainer = document.getElementById("GroupNamesSelect")
     //clear the inner html
     selectContainer.innerHTML = "";
-    groups = document.querySelectorAll("#collapsibleDiv");
+    groups = document.getElementsByClassName("collapsibleDiv");
     //go through all the groups and index them
     for (var i = 0; i < groups.length; i++) {
         var group = groups[i];
         var option = document.createElement('option')
-        option.value = group.classList[0];
-        option.innerHTML = group.classList[0];
+        option.value = group.id;
+        option.innerHTML = group.id;
         selectContainer.appendChild(option)
     }
     //LoadReadPapers();
 }
+
+function printFunctionName() {
+    console.log(arguments.callee.caller.name);
+  }
