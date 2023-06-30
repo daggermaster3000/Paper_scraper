@@ -59,6 +59,15 @@ function LoadReadPapers() {
         console.log(tables)
         var parser = new DOMParser();
 
+        if (tables.length==0){
+           
+            // shiite here
+            var doc = parser.parseFromString(tables[i], 'text/html');
+            var element = doc.querySelector('table');
+            element.innerHTML = "";
+
+        }
+
         for (i = 0; i < tables.length; i++) {
 
             console.log(i)
