@@ -40,7 +40,7 @@ function initializeDataTables() {
     $('#myTable').DataTable();
 }
 
-function LoadRelatedPapers(){
+function LoadRelatedPapers() {
     printFunctionName();
     // get all groups
     groups = document.getElementsByClassName()
@@ -81,7 +81,7 @@ function LoadReadPapers() {
 
             var collapsible = document.querySelector("div#" + String(GroupName));
             var contentContainer = collapsible.lastElementChild;
-            console.log("collapsible id:"+collapsible);
+            console.log("collapsible id:" + collapsible);
             contentContainer.innerHTML = "";
 
             // Update the table
@@ -91,33 +91,53 @@ function LoadReadPapers() {
             var table = collapsible.getElementsByClassName("readTable")[0];
             var tbody = table.getElementsByTagName("tbody")[0];
             var rows = tbody.getElementsByTagName("tr");
-            console.log("a")
+
             // Add checkboxes to each row
             for (var j = 0; j < rows.length; j++) {
                 // Create a new cell for the checkbox
                 var cell = document.createElement("td");
 
-                // Create a checkbox element
-                var checkbox = document.createElement("input");
-                checkbox.type = "checkbox";
-                checkbox.id = "myCheckbox";
-                checkbox.checked = true;
+                // Create a delete button element
+                var button = document.createElement("button");
+                button.innerHTML = '<i class="fa fa-trash-o"></i>';
+                button.classList.add('paperdeleteButton')
+
+                //checkbox.checked = true;
+
+                // Add a read checkbox
+                var readcheckbox = document.createElement("input");
+                readcheckbox.type = "checkbox";
+                readcheckbox.className = "readcheck";
 
                 // Append the checkbox to the cell
-                cell.appendChild(checkbox);
+                cell.appendChild(button);
+                cell.appendChild(readcheckbox);
 
                 // Add event handlers
-                checkbox.addEventListener("change", handleCheckboxChange);
+                button.addEventListener("click", deleteReadPaper);
+                readcheckbox.addEventListener('change', function () {
+                    // Get the parent row of the checkbox
+                    const row = this.parentNode.parentNode;
 
+                    // Change row color based on checkbox state
+                    if (this.checked) {
+                        row.style.backgroundColor = 'lightgreen';
+                    } else {
+                        row.style.backgroundColor = '';
+                    }
+                });
                 // Insert the new cell as the first cell in the row
                 rows[j].insertBefore(cell, rows[j].firstChild);
             }
             // Add header for the new column
             var headerRow = table.getElementsByTagName("thead")[0].getElementsByTagName("tr")[0];
             var headerCell = document.createElement("th");
-            headerCell.textContent = "Reading";
+            headerCell.textContent = " ";
             headerRow.insertBefore(headerCell, headerRow.firstChild);
 
+
+
+            // format the table
             $(table).DataTable();
             console.log("b")
         }
@@ -145,10 +165,6 @@ function load_csv(callback) {
             var checkbox = document.createElement("input");
             checkbox.type = "checkbox";
             checkbox.id = "myCheckbox";
-            // Create the label for the checkbox
-            //var label = document.createElement("label");
-            //label.textContent = "Toggle Function";
-            //label.htmlFor = "myCheckbox";
 
             // Append the checkbox to the cell
             cell.appendChild(checkbox);
@@ -176,7 +192,7 @@ function handleCheckboxChange(event) {
 
     // Get the parent row of the checkbox
     var row = checkbox.parentNode.parentNode;
-
+    console.log(row)
     // Get the title cell in the same row
     var titleCell = row.getElementsByTagName("td")[1];
 
@@ -188,17 +204,47 @@ function handleCheckboxChange(event) {
         AddReadEntry(title);
     } else {
         // Checkbox is unchecked, remove entry
-        RemoveReadEntry(title,method="title");
-        uncheckCheckbox(title)
+        console.log("title: " + title);
+        RemoveReadEntry(title, method = "title");
+        LoadReadPapers();
+        uncheckCheckbox(title);
+
     }
     //update the table as well after 5 sec
     //function wait(callback) {
     //  setTimeout(callback, 5000); // 5 seconds
     // }
     //wait(function () {
-    LoadReadPapers();
+
 
     //});
+
+
+}
+
+function deleteReadPaper(event) {
+    printFunctionName();
+    var checkbox = event.target;
+
+    // Get the parent row of the checkbox
+    var row = checkbox.parentNode.parentNode.parentNode;
+    console.log(row)
+    // Get the title cell in the same row
+    var titleCell = row.getElementsByTagName("td")[1];
+
+    // Get the title text
+    var title = titleCell.textContent;
+
+    console.log("title: " + title);
+    RemoveReadEntry(title, method = "title");
+    //update the table as well after 1 sec
+    function wait(callback) {
+        setTimeout(callback, 1000); // 1 sec
+    }
+    wait(function () {
+        LoadReadPapers();
+
+    });
 
 
 }
@@ -213,12 +259,12 @@ function AddReadEntry(title) {
     eel.add_read_entry(keyword, GroupName, title);
 }
 
-function RemoveReadEntry(title,method) {
+function RemoveReadEntry(title, method) {
     printFunctionName();
     // Get keyword input
     var inputElement = document.getElementById("keywordInput");
     var keyword = inputElement.value;
-    eel.remove_read_entry(title,method);
+    eel.remove_read_entry(title, method);
 }
 
 // Code for the tabs
@@ -254,7 +300,7 @@ function uncheckCheckbox(elementText) {
         var row = rows[i];
         console.log(row)
         var cells = row.getElementsByTagName('td');
-        var checkbox = cells[0].querySelector('input[type="checkbox"]');
+        var checkbox = cells[0].querySelector('button');
         var cellText = cells[1].textContent;
         if (cellText === elementText) {
             checkbox.checked = false;
@@ -307,12 +353,12 @@ function createGroup(GroupName = null, auto = false) {
     input.type = "text";
     input.classList.add('input-field');
     input.placeholder = "Enter Group Name";
-    
+
     input.addEventListener('input', function () {
         RenameClass(this);
         UpdateGroupSelect();
     });
-    
+
     //Create the delete button
     var deleteButton = document.createElement('button');
     deleteButton.classList.add('deleteButton')
@@ -329,7 +375,7 @@ function createGroup(GroupName = null, auto = false) {
         // Get the titles from the tables
         parentCollapsible = this.parentNode;
         groupname = parentCollapsible.id;
-        RemoveReadEntry(groupname,"Groupname");
+        RemoveReadEntry(groupname, "Groupname");
         DeleteParent(this);
 
     });
@@ -354,7 +400,7 @@ function createGroup(GroupName = null, auto = false) {
     if (auto == true) {
         input.value = GroupName
     }
-    
+
     // But we need to trigger an event in order to get the input to load
 
     // Create a new "input" event
@@ -379,7 +425,7 @@ function RenameClass(element) {
     newClassName = newClassName.replace(/\s/g, "-");
 
     div.id = newClassName;
-    eel.rename_group_name(String(previousName),String(newClassName));
+    eel.rename_group_name(String(previousName), String(newClassName));
     previousName = newClassName;
     //div.classList.remove(div.classList[0])
     //div.classList.add(newClassName)
@@ -414,4 +460,4 @@ function UpdateGroupSelect() {
 
 function printFunctionName() {
     console.log(arguments.callee.caller.name);
-  }
+}
