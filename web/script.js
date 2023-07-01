@@ -56,27 +56,22 @@ function LoadReadPapers() {
 
         //load_reading_list_csv returns an array of html tables
         var tables = content;
-        console.log(tables)
+        
         var parser = new DOMParser();
 
-        if (tables.length==0){
-           
-            // shiite here
-            var doc = parser.parseFromString(tables[i], 'text/html');
-            var element = doc.querySelector('table');
-            element.innerHTML = "";
+       
 
-        }
 
-        for (i = 0; i < tables.length; i++) {
+        for (i = 0; i <= tables.length; i++) {
 
-            console.log(i)
+            
             // Get the class of the table
             //console.log(tables[i])
             var doc = parser.parseFromString(tables[i], 'text/html');
+            //console.log(doc);
             var element = doc.querySelector('table');
             var GroupName = element.id;
-            console.log(GroupName)
+            //console.log("element: "+element);
 
 
 
@@ -90,7 +85,7 @@ function LoadReadPapers() {
 
             var collapsible = document.querySelector("div#" + String(GroupName));
             var contentContainer = collapsible.lastElementChild;
-            console.log("collapsible id:" + collapsible);
+            //console.log("collapsible id:" + collapsible);
             contentContainer.innerHTML = "";
 
             // Update the table
@@ -148,8 +143,9 @@ function LoadReadPapers() {
 
             // format the table
             $(table).DataTable();
-            console.log("b")
+            
         }
+    
 
     })
 }
@@ -246,9 +242,13 @@ function deleteReadPaper(event) {
 
     console.log("title: " + title);
     RemoveReadEntry(title, method = "title");
+
+    //remove the row
+    row.parentNode.removeChild(row);
+
     //update the table as well after 1 sec
     function wait(callback) {
-        setTimeout(callback, 1000); // 1 sec
+        setTimeout(callback, 10); // 1 sec
     }
     wait(function () {
         LoadReadPapers();
@@ -470,3 +470,13 @@ function UpdateGroupSelect() {
 function printFunctionName() {
     console.log(arguments.callee.caller.name);
 }
+
+
+// Excalidraw stuff
+// Get a reference to the button element
+const startExcalidrawButton = document.getElementById('startExcalidrawButton');
+
+// Add a click event listener to the button
+startExcalidrawButton.addEventListener('click', function() {
+  console.log("Implement excalidraw you mf!")
+});

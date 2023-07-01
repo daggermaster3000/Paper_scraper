@@ -13,6 +13,16 @@
     
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://unpkg.com/react@18.2.0/umd/react.development.js"></script>
+    <script src="https://unpkg.com/react-dom@18.2.0/umd/react-dom.development.js"></script>
+
+    <script
+      type="text/javascript"
+      src="https://unpkg.com/@excalidraw/excalidraw/dist/excalidraw.development.js"
+    ></script>
+
+   
+
 </head>
 
 <body>
@@ -40,6 +50,8 @@
         <select id="GroupNamesSelect" class="input-field">
             <option disabled selected value="">Select Group</option>
         </select>
+        <button id="startExcalidrawButton">Start Excalidraw</button>
+
     </div>
     <div class="tab">
         <button class="tablinks" id="defaultOpen" onclick="openCity(event, 'Results')">Results</button>
@@ -59,7 +71,13 @@
     <div id="NewPapers" class="tabcontent">
     </div>
 
+    <div class="container">
+        <h2>Excalidraw Embed Example</h1>
+        <div id="app"></div>
+      </div>
+
     <script src="https://cdn.datatables.net/1.11.3/js/jquery.dataTables.min.js"></script>
     <script src="script.js"></script>
+    <script src="excalidraw.js"></script>
 
 </html>
