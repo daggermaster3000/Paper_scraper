@@ -8,11 +8,7 @@ RANDOM IDEAS:
 4. Read paper in reading list
 
 TODO:
-- Delete button backend                                                 [v]
-- Clean the code up                                                     [v]
-- Add open Alex                                                         [v]
 - Add crossref                                                          [ ]
-- Add chose DB                                                          [v]
 - Add notes section                                                     [ ]
 - Suggest new papers                                                    [ ]
 - Add excalidraw notes                                                  [ ] 
@@ -20,8 +16,6 @@ TODO:
 - Make the groups draggable                                             [ ]
 - Write init function                                                   [ ]
 - Trigger load_readtables function more often...                        [ ]
-- Fix the readlist single delete bug                                    [v]
-- fix the id and classes issues                                         [v]
 """
  
 import eel
