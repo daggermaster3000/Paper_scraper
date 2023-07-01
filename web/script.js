@@ -42,10 +42,21 @@ function initializeDataTables() {
 
 function LoadRelatedPapers() {
     printFunctionName();
+
+    // get the read papers div
+    readPapers = document.getElementById("ReadPapers");
+
     // get all groups
-    groups = document.getElementsByClassName()
-    // load new papers 
-    eel.get_related_works
+    groups = readPapers.children;
+    for (let i = 0; i < groups.length; i++) {
+        console.log(groups[i]);
+      }
+        // create new group divs
+
+        // get all titles and iterate them and populate the divs
+
+        // load new papers 
+        eel.get_related_works();
 
 
 }
