@@ -1,4 +1,4 @@
-# Paper_scraper
+# Papermate
 A tool to scrape, organize and get updates on new scientific publications
 more to come...
 # Screenshot of UI
