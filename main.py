@@ -16,6 +16,8 @@ TODO:
 - Make the groups draggable                                             [ ]
 - Write init function                                                   [ ]
 - Trigger load_readtables function more often...                        [ ]
+- Add status bar                                                        [ ]
+- Trigger the related papers only on startup                            [ ]
 """
  
 import eel
@@ -126,11 +128,28 @@ def remove_read_entry(title, method = 'title', file_path = "read_papers.csv"):
     return("entry removed")
 
 @eel.expose
-def get_related_works(title,classes,id):
+def get_related_works(title,classes=None,id="relatedTable"):
+    print(f"A search will be performed on the\nfollowing titles:{title}")
+    print("searching related works...")
     related_papers_df = alex.get_new_related_works(title)[0]
-    related_papers_df.to_html(escape=False,classes=classes,table_id=id)
+    final_related_papers_df = related_papers_df.copy()
 
-    return related_papers_df
+    # check if the related papers are already present
+    for index, row in related_papers_df.iterrows():
+        if related_papers_df.isin(row).all(axis=1).any():
+            pass
+        else:
+            final_related_papers_df.append(row, ignore_index=True)
+
+    print("loading to csv...")
+    final_related_papers_df.to_csv("related_papers.csv",mode="a")
+    print("converting to html...")
+    html = final_related_papers_df.to_html(escape=False,classes=classes,table_id=id)
+    
+
+    print("Done!")
+
+    return html
 
 @eel.expose
 def rename_group_name(old_name,new_name):

@@ -4,6 +4,10 @@ var previousName = "none";
 // Get the element with id="defaultOpen" and click on it
 document.getElementById("startOpen").click();
 
+//Init functions
+LoadRelatedPapers();
+
+
 // show the loader
 function showLoader() {
     document.getElementById("loader1").style.display = "block";
@@ -43,23 +47,61 @@ function initializeDataTables() {
 function LoadRelatedPapers() {
     printFunctionName();
 
-    // get the read papers div
-    readPapers = document.getElementById("ReadPapers");
+    //get the reading list div
+    readlistdiv = document.getElementById("ReadPapers");
+    relateddiv = document.getElementById("NewPapers");
+    relateddiv.innerHTML = "";
+    // get all groups divs
+    groups = readlistdiv.children;
 
-    // get all groups
-    groups = readPapers.children;
+    // get the ids aka groupnames and store them in an array 
+    var groupnames = [];
+    var titles = [];
+    // iterate each group
     for (let i = 0; i < groups.length; i++) {
-        console.log(groups[i]);
-      }
-        // create new group divs
+        groupnames[i] = groups[i].id;
+        table = groups[i].getElementsByTagName('table')[0];
+        var relatedPapers;
+        // get all the titles from the first column
+        for (let i = 0; i < table.rows.length; i++) {
+            var cellValue = table.rows[i].cells[2].innerText;
+            titles[i] = (cellValue);
+        }
 
-        // get all titles and iterate them and populate the divs
+        function getRelatedPapers() {
+            return new Promise((resolve, reject) => {
+              eel.get_related_works(titles)(function(result) {
+                resolve(result);
+              });
+            });
+          }
+          
+          async function waitForExecution() {
+            // Await the eel function call
+            const relatedPapers = await getRelatedPapers();
+          
+            // Print the result to the console
+            //console.log(relatedPapers);
+            createNewPapersGroup(groupnames[i], true, relatedPapers);
+          }
+          
+          // Call the function
+          waitForExecution();
 
-        // load new papers 
-        eel.get_related_works();
+          // format the table
+        
 
-
+    }
 }
+
+
+
+
+
+
+
+
+
 
 function LoadReadPapers() {
     printFunctionName();
@@ -67,15 +109,15 @@ function LoadReadPapers() {
 
         //load_reading_list_csv returns an array of html tables
         var tables = content;
-        
+
         var parser = new DOMParser();
 
-       
+
 
 
         for (i = 0; i <= tables.length; i++) {
 
-            
+
             // Get the class of the table
             //console.log(tables[i])
             var doc = parser.parseFromString(tables[i], 'text/html');
@@ -154,9 +196,9 @@ function LoadReadPapers() {
 
             // format the table
             $(table).DataTable();
-            
+
         }
-    
+
 
     })
 }
@@ -341,7 +383,7 @@ function DeleteParent(element) {
 }
 
 
-//code for the collapsible
+//code for the collapsible in readpapers
 
 function createGroup(GroupName = null, auto = false) {
     printFunctionName();
@@ -475,8 +517,78 @@ function UpdateGroupSelect() {
         option.innerHTML = group.id;
         selectContainer.appendChild(option)
     }
-    //LoadReadPapers();
+
 }
+
+// code for the collapsible in related papers
+function createNewPapersGroup(GroupName, auto = false, tableContent) {
+    printFunctionName();
+    //Create the html
+    var collapsibleDiv = document.createElement('div');
+    collapsibleDiv.classList.add("collapsibleDiv");
+    collapsibleDiv.setAttribute("id", GroupName);
+
+    //Create the collapsible button
+    var collapsibleButton = document.createElement('button');
+    collapsibleButton.classList.add('collapsible');
+    collapsibleButton.setAttribute("id", "collapsibleButton");
+    collapsibleButton.addEventListener("click", function () {
+        this.classList.toggle("active");
+        var content = this.nextElementSibling;
+        if (content.style.display === "block") {
+            content.style.display = "none";
+        } else {
+            content.style.display = "block";
+        }
+        if (content.style.maxHeight) {
+            content.style.maxHeight = null;
+        } else {
+            content.style.maxHeight = content.scrollHeight + "px";
+        }
+    });
+
+    // Create the input
+    var input = document.createElement("input");
+    input.type = "text";
+    input.classList.add('input-field');
+    input.placeholder = GroupName;
+    input.disabled = true;
+
+
+    //Create the content div
+    var content = document.createElement('div');
+    content.style.display = 'none';
+    content.classList.add('content');
+
+    content.innerHTML = '<div class="newpapers table-container" id="newpapers">' + tableContent + '</div>';
+
+    var table = content.getElementsByTagName("relatedTable");
+    $(table).DataTable();
+    //Append to the tab section
+    var container = document.getElementById('NewPapers');
+    container.appendChild(collapsibleDiv);
+    collapsibleDiv.appendChild(collapsibleButton);
+    collapsibleDiv.appendChild(content);
+    collapsibleButton.appendChild(input);
+
+    // to rename the class to the GroupName argument
+    if (auto == true) {
+        input.value = GroupName
+    }
+
+    // But we need to trigger an event in order to get the input to load
+
+    // Create a new "input" event
+    var inputEvent = new Event("input");
+
+    // Dispatch the event on the input element
+    input.dispatchEvent(inputEvent);
+
+
+    //Manage the backend
+
+}
+
 
 function printFunctionName() {
     console.log(arguments.callee.caller.name);
@@ -488,6 +600,6 @@ function printFunctionName() {
 const startExcalidrawButton = document.getElementById('startExcalidrawButton');
 
 // Add a click event listener to the button
-startExcalidrawButton.addEventListener('click', function() {
-  console.log("Implement excalidraw you mf!")
+startExcalidrawButton.addEventListener('click', function () {
+    console.log("Implement excalidraw you mf!")
 });

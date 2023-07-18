@@ -71,8 +71,9 @@ def get_new_related_works(title,data_list=["title","publication_date","author","
         related_works = Works().search(tit).get()[0]["related_works"] #maybe using the OA ID would be better
 
         # get the data of the individual related works
-        for work in related_works:
-            related_paper = Works()[work[21:]]
+        for work in related_works[0:2]:
+            
+            related_paper = Works()[str(work[21:])]
 
             if datetime.strptime(related_paper["publication_date"],"%Y-%m-%d").date()>=current_date and related_paper["id"] not in new_related_papers:
                 add_to_new = True
@@ -84,10 +85,17 @@ def get_new_related_works(title,data_list=["title","publication_date","author","
                 for data in data_list:
                 # a bit of twerking for the author name
                     if data == "author":
-                            #print(work["authorships"][0]["author"]["display_name"])
-                            related_df[data].append(related_paper["authorships"][0]["author"]["display_name"])
-                            if add_to_new == True:
-                                new_df[data].append(related_paper["authorships"][0]["author"]["display_name"])
+                            #print("related paper:",related_paper)
+                            #print(related_paper["authorships"][0]["author"]["display_name"])
+                            try:
+                                related_df[data].append(related_paper["authorships"][0]["author"]["display_name"])
+                                if add_to_new == True:
+                                    new_df[data].append(related_paper["authorships"][0]["author"]["display_name"])
+                            except:
+                                related_df[data].append("N/A")
+                                if add_to_new == True:
+                                    new_df[data].append("N/A")
+
                     else:    
                         try:
                             if add_to_new == True:
@@ -106,5 +114,9 @@ def get_new_related_works(title,data_list=["title","publication_date","author","
 
 #print(Authors().search("Neuhauss").get())
 paper = scrape_alex("zebrafish")
+"""
 paper_title = paper.at[0,"title"]
-print(get_new_related_works([paper_title])[1])
+print("got title!   "+paper_title)
+print("searching related works...")
+print(get_new_related_works([paper_title])[0])
+"""
