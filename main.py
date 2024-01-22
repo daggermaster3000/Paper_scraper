@@ -71,7 +71,8 @@ def load_reading_list_csv(path,classe,id):
         for index, row in df.iterrows():
             
             if row['Groupname'] == group:
-                table = table.append(row,ignore_index=True)
+                #table = table.append(row,ignore_index=True)
+                table = pd.concat([table, pd.DataFrame([row])], ignore_index=True)
         
 
         # Keep the columns we want
